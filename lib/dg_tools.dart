@@ -1,12 +1,25 @@
 part of packages;
 
 class DgTools {
+  /// ```
+  /// GlobalKey metaKey;
+  /// GlobalKey targetKey;
+  /// RepaintBoundary(
+  ///     key: metaKey,
+  ///     child: meta widget
+  /// )
+  /// RepaintBoundary(
+  ///     key: targetKey,
+  ///     child: target widget
+  /// )
+  /// moveAnimation( metaKey : metaKey,targetKeys : [targetKey]);
+  /// ```
   static moveAnimation(
       {GlobalKey metaKey,
       List<GlobalKey> targetKeys,
       double endOpacity = 0,
       MoveType moveType = MoveType.classic,
-      Duration transientTime = const Duration(milliseconds:700),
+      Duration transientTime = const Duration(milliseconds: 700),
       bool rotate = false}) async {
     assert(metaKey != null && targetKeys != null && targetKeys.length > 0);
     RenderRepaintBoundary metaRrb = metaKey.currentContext.findRenderObject();

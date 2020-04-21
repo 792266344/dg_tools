@@ -84,7 +84,7 @@ class _WidgetImageState extends State<WidgetImage>
     animationLeft = CurvedAnimation(parent: controller, curve: Curves.linear);
     animationOpacity =
         CurvedAnimation(parent: controller, curve: Curves.linear);
-            animationAngle =
+    animationAngle =
         CurvedAnimation(parent: controller, curve: Curves.easeInCubic);
     switch (widget.moveType) {
       case MoveType.linear:
@@ -119,7 +119,7 @@ class _WidgetImageState extends State<WidgetImage>
         begin: widget.metaLeft,
         end: widget.targetLeft + widget.targetHeight / 2);
     tweenOpacity = Tween<double>(begin: 1.0, end: widget.endOpacity);
-    tweenAngle = Tween<double>(begin: 0.01, end: math.pi/0.5);
+    tweenAngle = Tween<double>(begin: 0.01, end: math.pi / 0.5);
   }
 
   @override
