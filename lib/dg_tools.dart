@@ -6,7 +6,8 @@ class DgTools {
       List<GlobalKey> targetKeys,
       double endOpacity = 0,
       MoveType moveType = MoveType.classic,
-      Duration transientTime = const Duration(milliseconds:700)}) async {
+      Duration transientTime = const Duration(milliseconds:700),
+      bool rotate = false}) async {
     assert(metaKey != null && targetKeys != null && targetKeys.length > 0);
     RenderRepaintBoundary metaRrb = metaKey.currentContext.findRenderObject();
     Size metaSize = metaRrb.size;
@@ -35,6 +36,7 @@ class DgTools {
           endOpacity: endOpacity,
           moveType: moveType,
           transientTime: transientTime,
+          rotate: rotate,
         );
       });
 

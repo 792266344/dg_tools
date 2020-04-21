@@ -21,6 +21,8 @@ class WidgetImage extends StatefulWidget {
 
   final MoveType moveType;
 
+  final bool rotate;
+
   WidgetImage(
       {this.metaWidth,
       this.metaHeight,
@@ -34,7 +36,8 @@ class WidgetImage extends StatefulWidget {
       this.entry,
       this.endOpacity = 0,
       this.transientTime = const Duration(milliseconds: 700),
-      this.moveType = MoveType.classic})
+      this.moveType = MoveType.classic,
+      this.rotate = false})
       : assert(child != null);
 
   @override
@@ -49,11 +52,13 @@ class _WidgetImageState extends State<WidgetImage>
   CurvedAnimation animationTop;
   CurvedAnimation animationLeft;
   CurvedAnimation animationOpacity;
+  CurvedAnimation animationAngle;
   Tween<double> tweenWidth;
   Tween<double> tweenHeight;
   Tween<double> tweenTop;
   Tween<double> tweenLeft;
   Tween<double> tweenOpacity;
+  Tween<double> tweenAngle;
 
   @override
   void initState() {
@@ -73,66 +78,34 @@ class _WidgetImageState extends State<WidgetImage>
   }
 
   initAnimation() {
+    animationWidth = CurvedAnimation(parent: controller, curve: Curves.linear);
+    animationHeight = CurvedAnimation(parent: controller, curve: Curves.linear);
+    animationTop = CurvedAnimation(parent: controller, curve: Curves.linear);
+    animationLeft = CurvedAnimation(parent: controller, curve: Curves.linear);
+    animationOpacity =
+        CurvedAnimation(parent: controller, curve: Curves.linear);
+            animationAngle =
+        CurvedAnimation(parent: controller, curve: Curves.easeInCubic);
     switch (widget.moveType) {
       case MoveType.linear:
-        animationWidth =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationHeight =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationTop =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationLeft =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationOpacity =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         break;
       case MoveType.cool:
-        animationWidth =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationHeight =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationTop =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         animationLeft =
             CurvedAnimation(parent: controller, curve: Curves.easeInOutBack);
-        animationOpacity =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         break;
       case MoveType.parabola:
-        animationWidth =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationHeight =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationTop =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         animationLeft =
             CurvedAnimation(parent: controller, curve: Curves.bounceOut);
-        animationOpacity =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         break;
       case MoveType.meco:
         animationWidth =
             CurvedAnimation(parent: controller, curve: Curves.easeInExpo);
         animationHeight =
             CurvedAnimation(parent: controller, curve: Curves.easeInExpo);
-        animationTop =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationLeft =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationOpacity =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         break;
       default:
-        animationWidth =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationHeight =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         animationTop =
             CurvedAnimation(parent: controller, curve: Curves.easeInQuint);
-        animationLeft =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
-        animationOpacity =
-            CurvedAnimation(parent: controller, curve: Curves.linear);
         break;
     }
   }
@@ -146,6 +119,7 @@ class _WidgetImageState extends State<WidgetImage>
         begin: widget.metaLeft,
         end: widget.targetLeft + widget.targetHeight / 2);
     tweenOpacity = Tween<double>(begin: 1.0, end: widget.endOpacity);
+    tweenAngle = Tween<double>(begin: 0.01, end: math.pi/0.5);
   }
 
   @override
@@ -161,8 +135,11 @@ class _WidgetImageState extends State<WidgetImage>
         left: tweenLeft.evaluate(animationLeft),
         width: tweenWidth.evaluate(animationWidth),
         height: tweenHeight.evaluate(animationHeight),
-        child: Opacity(
-            opacity: tweenOpacity.evaluate(animationOpacity),
-            child: widget.child));
+        child: Transform.rotate(
+            //旋转90度
+            angle: widget.rotate ? tweenAngle.evaluate(animationAngle) : 0.01,
+            child: Opacity(
+                opacity: tweenOpacity.evaluate(animationOpacity),
+                child: widget.child)));
   }
 }

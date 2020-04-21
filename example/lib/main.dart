@@ -76,7 +76,13 @@ class _MyAppState extends State<MyApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          DgTools.moveAnimation(metaKey: keyA,targetKeys: [keyB,keyC],endOpacity: 0.2,moveType: MoveType.parabola);
+          DgTools.moveAnimation(
+              metaKey: keyA,
+              targetKeys: [keyB, keyC],
+              endOpacity: 0.2,
+              moveType: MoveType.linear,
+              transientTime: Duration(seconds: 1),
+              rotate: true);
         },
         tooltip: 'Increment',
         child: RepaintBoundary(
