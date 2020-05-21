@@ -23,6 +23,8 @@ class WidgetImage extends StatefulWidget {
 
   final bool rotate;
 
+  final bool oval;
+
   WidgetImage(
       {this.metaWidth,
       this.metaHeight,
@@ -37,7 +39,8 @@ class WidgetImage extends StatefulWidget {
       this.endOpacity = 0,
       this.transientTime = const Duration(milliseconds: 700),
       this.moveType = MoveType.classic,
-      this.rotate = false})
+      this.rotate = false,
+      this.oval = true})
       : assert(child != null);
 
   @override
@@ -53,12 +56,14 @@ class _WidgetImageState extends State<WidgetImage>
   CurvedAnimation animationLeft;
   CurvedAnimation animationOpacity;
   CurvedAnimation animationAngle;
+  CurvedAnimation animationRadius;
   Tween<double> tweenWidth;
   Tween<double> tweenHeight;
   Tween<double> tweenTop;
   Tween<double> tweenLeft;
   Tween<double> tweenOpacity;
   Tween<double> tweenAngle;
+  Tween<double> tweenRadius;
 
   @override
   void initState() {
@@ -86,6 +91,7 @@ class _WidgetImageState extends State<WidgetImage>
         CurvedAnimation(parent: controller, curve: Curves.linear);
     animationAngle =
         CurvedAnimation(parent: controller, curve: Curves.easeInCubic);
+    animationRadius = CurvedAnimation(parent: controller, curve: Curves.linear);
     switch (widget.moveType) {
       case MoveType.linear:
         break;
@@ -119,7 +125,8 @@ class _WidgetImageState extends State<WidgetImage>
         begin: widget.metaLeft,
         end: widget.targetLeft + widget.targetHeight / 2);
     tweenOpacity = Tween<double>(begin: 1.0, end: widget.endOpacity);
-    tweenAngle = Tween<double>(begin: 0.01, end: math.pi / 0.5);
+    tweenAngle = Tween<double>(begin: 0.01, end: pi / 0.5);
+    tweenRadius = Tween<double>(begin: 0.0, end: 50);
   }
 
   @override
@@ -138,8 +145,10 @@ class _WidgetImageState extends State<WidgetImage>
         child: Transform.rotate(
             //旋转90度
             angle: widget.rotate ? tweenAngle.evaluate(animationAngle) : 0.01,
-            child: Opacity(
-                opacity: tweenOpacity.evaluate(animationOpacity),
-                child: widget.child)));
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(tweenRadius.evaluate(animationRadius)),
+                child: Opacity(
+                    opacity: tweenOpacity.evaluate(animationOpacity),
+                    child: widget.child))));
   }
 }
